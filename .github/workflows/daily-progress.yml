@@ -9,11 +9,16 @@ jobs:
   update-progress:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write        # REQUIRED to allow pushing commits
+      actions: read
+      packages: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}   # enables push access
           fetch-depth: 0
 
       - name: Set up Python
@@ -38,3 +43,4 @@ jobs:
 
           git commit -m "Daily progress update (auto)"
           git push
+
