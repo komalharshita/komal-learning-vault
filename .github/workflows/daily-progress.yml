@@ -11,14 +11,11 @@ jobs:
 
     permissions:
       contents: write        # REQUIRED to allow pushing commits
-      actions: read
-      packages: read
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}   # enables push access
           fetch-depth: 0
 
       - name: Set up Python
@@ -29,18 +26,21 @@ jobs:
       - name: Run progress update script
         run: python scripts/update_log.py
 
-      - name: Commit changes
+      - name: Commit and push changes (counts as contribution)
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "komalharshita"
+          git config user.email "komal.sony234@gmail.com"
 
           git add -A
 
+          # Skip if no real changes
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
           fi
 
-          git commit -m "Daily progress update (auto)"
-          git push
+          # Dynamic commit message (unique per day)
+          git commit -m "chore: daily progress log ($(date -u '+%Y-%m-%d'))"
 
+          # Push to default branch
+          git push origin HEAD
