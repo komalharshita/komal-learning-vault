@@ -3,14 +3,14 @@ name: Daily Progress Log
 on:
   schedule:
     - cron: "0 0 * * *"     # runs every day at 00:00 UTC
-  workflow_dispatch:        # allow manual trigger
+  workflow_dispatch:
 
 jobs:
   update-progress:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write        # REQUIRED to allow pushing commits
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -29,18 +29,14 @@ jobs:
       - name: Commit and push changes (counts as contribution)
         run: |
           git config user.name "komalharshita"
-          git config user.email "komal.sony234@gmail.com"
+          git config user.email "12345678+komalharshita@users.noreply.github.com"
 
           git add -A
 
-          # Skip if no real changes
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
           fi
 
-          # Dynamic commit message (unique per day)
           git commit -m "chore: daily progress log ($(date -u '+%Y-%m-%d'))"
-
-          # Push to default branch
-          git push origin HEAD
+          git push origin HEAD:main
